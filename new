@@ -1,0 +1,126 @@
+Java
+import java.util.Scanner;
+
+public class TrueFalseGame {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int correctAnswers = 0;
+        int totalQuestions = 0;
+
+        while (true) {
+            // Generate a random question
+            String question = generateQuestion();
+
+            // Prompt the user to answer the question
+            System.out.println(question);
+            System.out.print("Enter your answer (true/false): ");
+            String answer = scanner.nextLine();
+
+            // Check if the answer is correct
+            boolean isCorrect = checkAnswer(question, answer);
+
+            // Update the score
+            if (isCorrect) {
+                correctAnswers++;
+            }
+            totalQuestions++;
+
+            // Display feedback to the user
+            if (isCorrect) {
+                System.out.println("Correct!");
+            } else {
+                System.out.println("Incorrect.");
+            }
+
+            // Ask the user if they want to play again
+            System.out.print("Do you want to play again? (yes/no): ");
+            String playAgain = scanner.nextLine();
+
+            if (!playAgain.equalsIgnoreCase("yes")) {
+                break;
+            }
+        }
+
+        // Display the final score
+        System.out.println("Your score: " + correctAnswers + "/" + totalQuestions);
+
+        scanner.close();
+    }
+
+    private static String generateQuestion() {
+        // Generate a random number to determine whether the question is true or false
+        boolean isTrue = Math.random() < 0.5;
+
+        // Generate a random question based on the generated truth value
+        String question;
+        if (isTrue) {
+            question = generateTrueQuestion();
+        } else {
+            question = generateFalseQuestion();
+        }
+
+        return question;
+    }
+
+    private static boolean checkAnswer(String question, String answer) {
+        // Extract the truth value from the question
+        boolean isTrue = question.startsWith("True:");
+
+        // Check if the user's answer matches the truth value
+        return (isTrue && answer.equalsIgnoreCase("true")) ||
+                (!isTrue && answer.equalsIgnoreCase("false"));
+    }
+
+    private static String generateTrueQuestion() {
+        // Generate a random true fact
+        int randomFactIndex = (int) (Math.random() * trueFacts.length);
+        String trueFact = trueFacts[randomFactIndex];
+
+        return "True: " + trueFact;
+    }
+
+    private static String generateFalseQuestion() {
+        // Generate a random false statement based on a true fact
+        int randomFactIndex = (int) (Math.random() * trueFacts.length);
+        String trueFact = trueFacts[randomFactIndex];
+
+        // Modify the true fact to make it false
+        String falseStatement = modifyFact(trueFact);
+
+        return "False: " + falseStatement;
+    }
+
+    private static String modifyFact(String fact) {
+        // Replace a word or phrase with the opposite
+        String[] words = fact.split(" ");
+        int randomWordIndex = (int) (Math.random() * words.length);
+
+        String oppositeWord = getOppositeWord(words[randomWordIndex]);
+        words[randomWordIndex] = oppositeWord;
+
+        return String.join(" ", words);
+    }
+
+    private static String getOppositeWord(String word) {
+        // Replace a few common words with their opposites
+        switch (word) {
+            case "true": return "false";
+            case "false": return "true";
+            case "big": return "small";
+            case "small": return "big";
+            case "up": return "down";
+            case "down": return "up";
+            default: return word;
+        }
+    }
+
+    private static final String[] trueFacts = {
+            "The Earth is round.",
+            "Water boils at 100 degrees Celsius.",
+            "The capital of France is Paris.",
+            "The sun is a star.",
+            "Humans have five senses.",
+        };
+}
